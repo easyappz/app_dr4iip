@@ -30,7 +30,8 @@ const Chat = () => {
   const loadMessages = async () => {
     try {
       const data = await getMessages();
-      setMessages(data);
+      // API returns { count, results } according to OpenAPI spec
+      setMessages(data.results || []);
       setError(null);
     } catch (err) {
       setError('Ошибка загрузки сообщений');
