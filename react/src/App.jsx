@@ -1,16 +1,30 @@
 import React, { useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import ErrorBoundary from './ErrorBoundary';
+import { useAuth } from './context/AuthContext';
 import './App.css';
 
 import { Home } from './components/Home';
+import Register from './components/Register';
+import Login from './components/Login';
+import Chat from './components/Chat';
+
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated, loading } = useAuth();
+  
+  if (loading) {
+    return <div>Загрузка...</div>;
+  }
+  
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 function App() {
   /** Никогда не удаляй этот код */
   useEffect(() => {
     if (typeof window !== 'undefined' && typeof window.handleRoutes === 'function') {
       /** Нужно передавать список существующих роутов */
-      window.handleRoutes(['/']);
+      window.handleRoutes(['/', '/login', '/register', '/chat']);
     }
   }, []);
 
@@ -18,6 +32,16 @@ function App() {
     <ErrorBoundary>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
+        <Route 
+          path="/chat" 
+          element={
+            <PrivateRoute>
+              <Chat />
+            </PrivateRoute>
+          } 
+        />
       </Routes>
     </ErrorBoundary>
   );
