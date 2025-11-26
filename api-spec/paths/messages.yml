@@ -1,0 +1,127 @@
+get:
+  summary: Get message history
+  description: Retrieve all chat messages
+  tags:
+    - Messages
+  operationId: getMessages
+  isSecure: true
+  security:
+    - BearerAuth: []
+  parameters:
+    - name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 100
+      description: Maximum number of messages to return
+    - name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        default: 0
+      description: Number of messages to skip
+  responses:
+    '200':
+      description: List of messages
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              count:
+                type: integer
+              results:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    content:
+                      type: string
+                    author:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        username:
+                          type: string
+                    created_at:
+                      type: string
+                      format: date-time
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+
+post:
+  summary: Send a message
+  description: Send a new message to the group chat
+  tags:
+    - Messages
+  operationId: sendMessage
+  isSecure: true
+  security:
+    - BearerAuth: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            content:
+              type: string
+              minLength: 1
+              description: Message content
+          required:
+            - content
+  responses:
+    '201':
+      description: Message successfully sent
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              content:
+                type: string
+              author:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+              created_at:
+                type: string
+                format: date-time
+    '400':
+      description: Bad request - validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              detail:
+                type: object
+    '401':
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string

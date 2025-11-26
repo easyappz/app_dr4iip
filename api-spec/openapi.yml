@@ -1,0 +1,70 @@
+openapi: 3.0.3
+info:
+  title: Group Chat API
+  version: 1.0.0
+  description: API for group chat application
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+paths:
+  /api/auth/register:
+    $ref: './paths/auth-register.yml'
+  /api/auth/login:
+    $ref: './paths/auth-login.yml'
+  /api/auth/me:
+    $ref: './paths/auth-me.yml'
+  /api/auth/profile:
+    $ref: './paths/auth-profile.yml'
+  /api/messages:
+    $ref: './paths/messages.yml'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Member:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          maxLength: 150
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - username
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        content:
+          type: string
+        author:
+          $ref: '#/components/schemas/Member'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - content
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        detail:
+          type: string

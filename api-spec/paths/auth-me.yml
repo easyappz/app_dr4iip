@@ -1,0 +1,33 @@
+get:
+  summary: Get current user
+  description: Retrieve information about the authenticated user
+  tags:
+    - Authentication
+  operationId: getCurrentUser
+  isSecure: true
+  security:
+    - BearerAuth: []
+  responses:
+    '200':
+      description: Current user information
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              username:
+                type: string
+              created_at:
+                type: string
+                format: date-time
+    '401':
+      description: Unauthorized - invalid or missing token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
